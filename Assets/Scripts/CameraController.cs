@@ -10,10 +10,12 @@ namespace JBK.AstrocyteViewer
         [SerializeField] private float panSensitivity = 0.2f;
         [SerializeField] private float zoomSensitivity = 0.2f;
 
+
         private Controls.CamMovementActions _camMovementActions;
         private float _cameraDistance;
         private bool _isDragging;
         private bool _isPanning;
+        private bool _overUI;
         private Transform _transform;
         private Transform _pivotPoint;
         private EventSystem _eventSystem;
@@ -47,11 +49,7 @@ namespace JBK.AstrocyteViewer
             _camMovementActions.MouseScroll.performed -= Zoom;
         }
 
-        private void OnStartMouseClick(InputAction.CallbackContext obj)
-        {
-            if (_eventSystem != null && _eventSystem.IsPointerOverGameObject()) return;  //don't drag if over UI
-            _isDragging = true;
-        }
+        private void OnStartMouseClick(InputAction.CallbackContext obj) => _isDragging = !_overUI;
 
         private void OnEndMouseClick(InputAction.CallbackContext obj) => _isDragging = false;
 
@@ -61,7 +59,11 @@ namespace JBK.AstrocyteViewer
 
         private void Update()
         {
-            if (!_isDragging) return;
+            if (!_isDragging)
+            {
+                _overUI =  _eventSystem != null && _eventSystem.IsPointerOverGameObject();  //don't drag if over UI
+                return;
+            }
 
             var mouseDelta = _camMovementActions.MouseDelta.ReadValue<Vector2>();
 
