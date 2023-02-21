@@ -1,0 +1,16 @@
+{
+    "name": "Editor",
+    "rootNamespace": "JBK.AstrocyteViewer.Editor",
+    "references": [
+        "GUID:00a1534514c74cdc9425cce3177c55e7"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
