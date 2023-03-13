@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using JBK.AstrocyteViewer.DataFunctions;
+using UnityEditor;
 using UnityEngine;
 
 namespace JBK.AstrocyteViewer.Editor.Editor
@@ -6,7 +7,7 @@ namespace JBK.AstrocyteViewer.Editor.Editor
     public class MatlabModelLoader : EditorWindow
     {   
         private string _xFigureFilePath;
-        
+
         [MenuItem("JBK/MatlabModelLoader")]
         private static void ShowWindow()
         {
@@ -30,7 +31,8 @@ namespace JBK.AstrocyteViewer.Editor.Editor
 
         private void LoadModel()
         {
-            Debug.Log(_xFigureFilePath);
+            var figureDataStructList = new FigureDataStructContainer(_xFigureFilePath);
+            Debug.Log($"figureDataStructList is loaded with {figureDataStructList.DataStructList.Count} elements");
         }
     }
 }
