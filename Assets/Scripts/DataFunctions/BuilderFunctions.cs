@@ -35,12 +35,12 @@ namespace JBK.AstrocyteViewer.DataFunctions
         {
             if (opacity < 1f)
             {
-                meshInstance.GetComponent<MeshRenderer>().material = transparentMat;
-                meshInstance.GetComponent<MeshRenderer>().material.SetFloat("_opacity", opacity);
+                meshInstance.GetComponent<MeshRenderer>().sharedMaterial = transparentMat;
+                meshInstance.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_opacity", opacity);
             }
             else
             {
-                meshInstance.GetComponent<MeshRenderer>().material = opaqueMat;
+                meshInstance.GetComponent<MeshRenderer>().sharedMaterial = opaqueMat;
             }
         }
         public static void SpawnScatterSpheres(Vector3[] pts, int[] sz, Color color, Material mat, Transform transform, int[] shootability, int[] id)
