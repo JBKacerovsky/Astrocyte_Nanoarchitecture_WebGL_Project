@@ -132,6 +132,34 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Mouse"",
+            ""id"": ""ec7a3945-45c0-4dd7-bf04-d26753289fe0"",
+            ""actions"": [
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""4b86d9d4-16e8-4c49-b278-e93112b57fdb"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ece07aca-85ed-4697-ad43-479c95486726"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -148,6 +176,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_CamMovement_MouseDelta = m_CamMovement.FindAction("MouseDelta", throwIfNotFound: true);
         m_CamMovement_MouseScroll = m_CamMovement.FindAction("MouseScroll", throwIfNotFound: true);
         m_CamMovement_PanActive = m_CamMovement.FindAction("PanActive", throwIfNotFound: true);
+        // Mouse
+        m_Mouse = asset.FindActionMap("Mouse", throwIfNotFound: true);
+        m_Mouse_MousePosition = m_Mouse.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -260,6 +291,39 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         }
     }
     public CamMovementActions @CamMovement => new CamMovementActions(this);
+
+    // Mouse
+    private readonly InputActionMap m_Mouse;
+    private IMouseActions m_MouseActionsCallbackInterface;
+    private readonly InputAction m_Mouse_MousePosition;
+    public struct MouseActions
+    {
+        private @Controls m_Wrapper;
+        public MouseActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MousePosition => m_Wrapper.m_Mouse_MousePosition;
+        public InputActionMap Get() { return m_Wrapper.m_Mouse; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MouseActions set) { return set.Get(); }
+        public void SetCallbacks(IMouseActions instance)
+        {
+            if (m_Wrapper.m_MouseActionsCallbackInterface != null)
+            {
+                @MousePosition.started -= m_Wrapper.m_MouseActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_MouseActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_MouseActionsCallbackInterface.OnMousePosition;
+            }
+            m_Wrapper.m_MouseActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+            }
+        }
+    }
+    public MouseActions @Mouse => new MouseActions(this);
     private int m_CamSchemeIndex = -1;
     public InputControlScheme CamScheme
     {
@@ -275,5 +339,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMouseDelta(InputAction.CallbackContext context);
         void OnMouseScroll(InputAction.CallbackContext context);
         void OnPanActive(InputAction.CallbackContext context);
+    }
+    public interface IMouseActions
+    {
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }
